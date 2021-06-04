@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formulario Producto</title>
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+<link rel="stylesheet" th:href="@{/css/forms.css}">
+<link rel="stylesheet" th:href="@{/css/footer.css}">
+<link rel="stylesheet"
+	th:href="@{/webjars/fontawesome/css/font-awesome.min.css}">
+</head>
+<body>
+	<div th:replace="layout/navbar.html :: navbar"></div>
+	<div class="container-fluid">
+		<div class="row justify-content-center">
+			<div class="col-md-7 formulario my-5 shadow p-4 bg-white rounded">
+				<h1 th:if="${producto.codigo == 0}" class="text-center">Cargar
+					Producto</h1>
+				<h1 th:if="${producto.codigo != 0}" class="text-center">Modificar
+					Producto</h1>
+				<br>
+				<form th:action="@{/producto/guardar}" th:object="${producto}"
+					method="POST" class="form_content" enctype="multipart/form-data">
+					<input type="hidden" th:field="*{codigo}" />
+					<div class="form-group row">
+						<label for="nombreApellido" class="col-sm-2 col-form-label">Nombre</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="nombre"
+								placeholder="Nombre" th:field="*{nombre}">
+							<div class="form-text text-danger"
+								th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="precio" class="col-sm-2 col-form-label">Precio</label>
+						<div class="col-sm-10">
+							<input type="number" class="form-control" id="precio"
+								placeholder="Precio" th:field="*{precio}" min="0" step='0.01'
+								value='0.00'>
+							<div class="form-text text-danger"
+								th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}"></div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="marca" class="col-sm-2 col-form-label">Marca</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="marca"
+								placeholder="Marca" th:field="*{marca}">
+							<div class="form-text text-danger"
+								th:if="${#fields.hasErrors('marca')}" th:errors="*{marca}"></div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="stock" class="col-sm-2 col-form-label">Stock</label>
+						<div class="col-sm-10">
+							<input type="number" class="form-control" id="stock"
+								placeholder="Stock" th:field="*{stock}">
+							<div class="form-text text-danger"
+								th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}"></div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="descripcion" class="col-sm-2 col-form-label">Descripcion</label>
+						<div class="col-sm-10">
+							<textarea class="form-control" id="descripcion" rows="3"
+								th:field="*{descripcion}"></textarea>
+							<div class="form-text text-danger"
+								th:if="${#fields.hasErrors('descripcion')}"
+								th:errors="*{descripcion}"></div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="file" class="col-sm-2 col-form-label">Imagen</label>
+						<div class="col-sm-10 d-flex align-items-center">
+							<input type="hidden" class="form-control" id="imagen"
+								th:name="imagen" th:value="*{imagen}" />
+							<input type="file" name="file" class="form-control-file"
+								accept="image/x-png,image/gif,image/jpeg,image/png,image/jpeg"
+								onchange="loadFile(event)">
+							<img th:if="${producto.imagen != ''}" id="output"
+								th:src="*{'data:image/png;base64,'+imagen}"
+								style="padding-top: 2px; width: 146px;" /> <img
+								th:if="${producto.imagen == ''}" id="output"
+								src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII="
+								style="padding-top: 2px; width: 146px;" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="col-sm-12">
+							<button type="submit" class="btn btn-primary form_button">Guardar</button>
+							<a th:href="@{/productos}" class="btn btn-secondary" id="delRef">Cancelar
+							</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div th:replace="layout/footer :: footer"></div>
+	<script type="text/javascript">
+		var loadFile = function(event) {
+		var image = document.getElementById('output');
+		image.src = URL.createObjectURL(event.target.files[0]);
+	};
+	</script>
+</body>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compras</title>
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}">
+</head>
+<link rel="stylesheet"
+	th:href="@{/webjars/fontawesome/css/font-awesome.min.css}"></link>
+<body>
+	<div th:replace="layout/navbar :: navbar"></div>
+	<div>
+		<div class="col-xs-12" style="height: 60px;"></div>
+		<div th:if="${compras.size > 0}" class="container-fluid">
+			<div class="row-fluid">
+				<div class="col-md-8 justify-content-left">
+					<form th:action="@{/compra/buscar}" th:object="${compra}"
+						th:method="GET">
+						<div class="form-group row">
+							<label for="nombreProd" class="col-sm-3 col-form-label">Nombre
+								Producto</label>
+							<div class="col-sm-5">
+								<input type="text" class="form-control" id="nombreProd"
+									name="nombreProd" th:field="*{producto.nombre}">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="monto" class="col-sm-3 col-form-label">Monto
+								Superior a</label>
+							<div class="col-sm-5">
+								<input type="number" class="form-control" id="monto"
+									name="monto" th:field="*{total}" min="0" step='0.01' value='0'>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-3 col-form-label"></div>
+							<div class="col-sm-5">
+								<button class="btn btn-primary" type="submit"
+									style="width: 100%;">Buscar</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<br>
+				<div class="col-12">
+					<h2>Compras</h2>
+					<table class="table table-bordered table-responsive p-3">
+						<thead class="thead-dark">
+							<tr class="text-center">
+								<th style="width: 6%">ID</th>
+								<th>Producto</th>
+								<th>Descripción</th>
+								<th style="width: 9%">Imagen</th>
+								<th style="width: 10%">Cantidad</th>
+								<th style="width: 11%">Total</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="compra : ${compras}">
+								<td th:text="${compra.id}"></td>
+								<td th:text="${compra.producto.nombre}"></td>
+								<td th:text="${compra.producto.descripcion}"></td>
+								<td><img class="card-img-top m-auto"
+									th:src="*{'data:image/png;base64,'+compra.producto.imagen}"></td>
+								<td th:text="${compra.cantidad}"></td>
+								<td>$ <span
+									th:text="${#numbers.formatDecimal(compra.total, 0, 'COMMA', 2, 'POINT')}">10.00</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:if="${compras.size == 0}" class="container-fluid">
+		<div class="row justify-content-center text-center">
+			<div class="col-9">
+				<h6>No se encontrarón compras</h6>
+				<a th:href="@{/compras}" class="btn btn-secondary" id="refrescar"
+					style="margin-bottom: 480px; width: 200px">Refrescar</a>
+				<h4>Chisato Moritaka その後の私</h4>
+				<div class="embed-responsive embed-responsive-16by9">
+					<iframe class="embed-responsive-item"
+						src="https://www.youtube.com/embed/JNWKXo4VXrc"></iframe>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-12" style="height: 30px;"></div>
+	<div th:replace="layout/footer :: footer"></div>
+	<div th:if="${compras.size == 0}" class="cookie-container text-center">
+		<p>
+			Todavía no se registraron compras, disfrute del <a
+				href="https://www.youtube.com/watch?v=JNWKXo4VXrc" id="selectedLink"
+				target="_blank">video.</a>
+		</p>
+		<button class="cookie-btn">
+			<span aria-hidden="true">x</span>
+		</button>
+	</div>
+	<script type="text/javascript">
+	const cookieContainer = document.querySelector(".cookie-container");
+	const cookieButton = document.querySelector(".cookie-btn");
+
+	cookieButton.addEventListener("click", () => {
+ 	cookieContainer.classList.remove("active");
+ 	localStorage.setItem("cookieBannerDisplayed", "true");
+	});
+
+	setTimeout(() => {
+  	if (!localStorage.getItem("cookieBannerDisplayed")) {
+    cookieContainer.classList.add("active");
+  	}
+}, 2000);</script>
+	<script type="text/javascript">
+	const numInputs = document.querySelectorAll('input[type=number]')
+
+	numInputs.forEach(function(input) {
+ 	input.addEventListener('change', function(e) {
+    if (e.target.value == '') {
+      e.target.value = 0
+    }
+  })
+})
+</script>
+</body>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</html>

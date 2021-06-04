@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tabla Clientes</title>
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet"
+	th:href="@{/webjars/fontawesome/css/font-awesome.min.css}">
+<link rel="stylesheet" th:href="@{/css/footer.css}">
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+	<div th:replace="layout/navbar :: navbar"></div>
+	<div class="container-fluid">
+		<div class="col-xs-12" style="height: 30px;"></div>
+		<h2>GESTION DE CLIENTES</h2>
+		<a th:href="@{/cliente/nuevo}" class="btn btn-success" id="delRef">Agregar
+			<i class="fa fa-plus"></i>
+		</a>
+		<div class="col-12">
+			<table class="table table-bordered table-responsive p-3">
+				<thead class="thead-dark">
+					<tr class="text-center">
+						<th style="width: 6%">ID</th>
+						<th>Tipo Documento</th>
+						<th>Nro Documento</th>
+						<th>Nombre Apellido</th>
+						<th>Correo</th>
+						<th>Password</th>
+						<th>Fecha Nac</th>
+						<th>Telefono</th>
+						<th>Ultima Compra</th>
+						<th>Estado Cuenta</th>
+						<th style="width: 10%">Saldo</th>
+						<th style="width: 6%">Editar</th>
+						<th style="width: 6%">Borrar</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="cliente : ${clientes}">
+						<td th:text="${cliente.id}"></td>
+						<td th:text="${cliente.tipoDocumento}"></td>
+						<td th:text="${cliente.nroDocumento}"></td>
+						<td th:text="${cliente.nombreApellido}"></td>
+						<td th:text="${cliente.email}"></td>
+						<td th:text="${cliente.password}"></td>
+						<td th:text="${cliente.fechaNacimiento}"></td>
+						<td
+							th:text="${cliente.codigoAreaTelefono} + '-' + ${cliente.nroTelefono}"></td>
+						<td th:text="${cliente.fechaUltimaCompra}"></td>
+						<td th:text="${cliente.cuenta.estado}"></td>
+						<td>$ <span
+							th:text="${#numbers.formatDecimal(cliente.cuenta.saldo, 0, 'COMMA', 2, 'POINT')}">10.00</span></td>
+						<td>					  
+						<a th:href="@{/cliente/modificar/{id}(id=${cliente.id})}"
+												class="btn btn-warning"><i
+								class="fa fa-edit"></i></a>					
+							</td>
+						<td><a data-toggle="modal" data-target="#removeModal"
+							class="btn btn-danger delBtn"
+							th:attr="data-target='#removeModal'+${cliente.id}"><i
+								class="fa fa-trash"></i> </a> <!-- #Modal for removing -->
+							<div class="modal fade" th:id="removeModal+${cliente.id}"
+								id="removeModal" tabindex="-1" role="dialog"
+								aria-labelledby="removeModalCenterTitle" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h4 class="modal-title" id="removeModalCenterTitle">Eliminar
+												Cliente</h4>
+											<button type="button" class="close" data-dismiss="modal"
+												aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<div class="modal-body">
+											<p class="alert alert-danger">
+												Estas seguro que deseas borrar a <span
+													th:text="${cliente.nombreApellido}"></span>?
+											</p>
+										</div>
+										<div class="modal-footer">
+											<a th:href="@{/cliente/delete/{id}(id=${cliente.id})}"
+												class="btn btn-danger" id="delRef">Aceptar</a>
+											<button type="button" class="btn btn-secondary"
+												data-dismiss="modal">Cancelar</button>		
+										</div>
+									</div>
+								</div>
+							</div></td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- Pagination -->
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<nav aria-label="Pagination">
+						<ul class="pagination justify-content-center">
+							<li class="page-item"
+								th:classappend="${prev == 0 ? 'disabled': ''}"><a
+								class="page-link" th:href="@{|/clientes/?page=${prev}|}">Anterior</a></li>
+							<li class="page-item" th:each="page : ${pages}"
+								th:classappend="${current == page ? 'active': ''}"><a
+								class="page-link" th:href="@{|/clientes/?page=${page}|}"
+								th:text="${page}"></a></li>
+							<li class="page-item"
+								th:classappend="${current == last ? 'disabled': ''}"><a
+								class="page-link" th:href="@{|/clientes/?page=${next}|}">Siguiente</a></li>
+						</ul>
+					</nav>
+				</div>
+				<div class="col-md-2"></div>
+			</div>
+		</div>
+	</div>
+	</div>
+	<div th:replace="layout/footer :: footer"></div>
+</body>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</html>
