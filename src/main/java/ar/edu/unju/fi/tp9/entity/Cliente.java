@@ -14,6 +14,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,6 +24,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
@@ -105,6 +109,12 @@ public class Cliente implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "cue_id")
 	private Cuenta cuenta;
+
+	@ManyToMany
+	@JoinTable(name = "clientes_beneficios",
+	joinColumns = @JoinColumn(name = "cli_id"),
+	inverseJoinColumns = @JoinColumn(name = "ben_id"))
+	private List<Beneficio> beneficios = new ArrayList<Beneficio>();
 
 	public Cliente() {
 	}
@@ -356,6 +366,15 @@ public class Cliente implements Serializable {
 
 	public void setCuenta(Cuenta cuenta) {
 		this.cuenta = cuenta;
+	}
+
+
+	public List<Beneficio> getBeneficios() {
+		return beneficios;
+	}
+
+	public void setBeneficios(List<Beneficio> beneficios) {
+		this.beneficios = beneficios;
 	}
 
 	@Override
