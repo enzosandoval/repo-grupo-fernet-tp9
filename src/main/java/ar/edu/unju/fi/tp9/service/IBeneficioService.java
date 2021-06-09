@@ -12,5 +12,6 @@ public interface IBeneficioService {
 	
 	public List<Beneficio> obtenerBeneficios ();
 	
+	public Beneficio buscarBeneficio(long id);
 	
 }

@@ -39,6 +39,10 @@ public class Beneficio {
 	
 	public Beneficio() {
 	}
+	
+	public Beneficio(String descripcion) {
+		this.descripcion = descripcion; 
+	}
 
 	public Beneficio(Long id, String descripcion) {
 		this.id = id;

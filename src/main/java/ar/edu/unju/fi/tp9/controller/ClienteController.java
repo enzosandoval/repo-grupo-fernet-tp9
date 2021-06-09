@@ -3,6 +3,7 @@
  */
 package ar.edu.unju.fi.tp9.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ar.edu.unju.fi.tp9.entity.Cliente;
+import ar.edu.unju.fi.tp9.entity.Beneficio;
 import ar.edu.unju.fi.tp9.service.IBeneficioService;
 import ar.edu.unju.fi.tp9.service.IClienteService;
 
@@ -41,7 +43,7 @@ public class ClienteController {
 	@Autowired
 	@Qualifier("beneficioServiceImp")
 	private IBeneficioService beneficioService;
-	
+
 	@Autowired
 	private Cliente cliente;
 
@@ -52,45 +54,30 @@ public class ClienteController {
 	 */
 	@GetMapping("/cliente/nuevo")
 	public String getClientePage(Model model) {
-		/**
-		 * El attribute "cliente" es el objeto que esta en el form mientras que cliente
-		 * es el atributo de tipo Cliente de esta clase
-		 */
 		cliente = new Cliente();
 		model.addAttribute("cliente", cliente);
-		model.addAttribute("beneficios", this.beneficioService.obtenerBeneficios());
+		model.addAttribute("beneficios", beneficioService.obtenerBeneficios());
 		return "nuevocliente.html";
 	}
 
-	/**
-	 * 
-	 * @param cliente
-	 * @return Un modelo y vista "clientes.html" que muestra la lista de clientes
-	 */
 	@PostMapping("/cliente/guardar")
-	public String getModelPageClientes(@ModelAttribute("cliente") @Valid Cliente cliente, BindingResult validationResult) {
-		
-		if (validationResult.hasErrors()){ // 🛑 Datos con errores, re-direccionar a:
-			return "nuevocliente.html";
-		}else{ // ✅ Datos todos correctos, hacer y re-direccionar a:
-			/**
-			 * Se agrega el objeto que vino de la vista a la listaClientes de la clase que
-			 * implementa IServiceCliente
-			 */
+	public String getModelPageClientes(@ModelAttribute("cliente") @Valid Cliente cliente,
+			BindingResult validationResult) {
+		if (validationResult.hasErrors()) { // 🛑 Datos con errores, re-direccionar a:
+			return "redirect:/cliente/nuevo";
+		} else { // ✅ Datos todos correctos, hacer y re-direccionar a:
+
+			List<Beneficio> beneficios = new ArrayList<Beneficio>();
+			for (Beneficio beneficio : cliente.getBeneficios()) {
+
+				beneficios.add(beneficioService.buscarBeneficio(beneficio.getId()));
+			}
+			cliente.setBeneficios(beneficios);
 			clienteService.guardar(cliente);
-			/**
-			 * Se agrega la listaClientes de la clase que implementa IServiceCliente al
-			 * modelAndView para luego ser recorrida y mostrada en la vista("clientes")
-			 */
 			return "redirect:/cliente/lista";
 		}
 	}
 
-	/**
-	 * 
-	 * @param model
-	 * @return La página "clientes.html" con los clientes existentes
-	 */
 	@GetMapping("/cliente/lista")
 	public String getListadoPage(@RequestParam Map<String, Object> params, Model model) {
 		model.addAttribute("cliente", cliente);
@@ -109,26 +96,15 @@ public class ClienteController {
 		model.addAttribute("last", totalPage);
 		return "clientes";
 	}
-	
-	/**
-	 * 
-	 * @param id
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
+
 	@GetMapping(value = "/cliente/modificar/{id}")
 	public String getUpdatePage(@PathVariable(value = "id") int id, Model model) throws Exception {
 		cliente = clienteService.obtenerClienteById(id);
 		model.addAttribute("cliente", cliente);
+		model.addAttribute("beneficios", beneficioService.obtenerBeneficios());
 		return "nuevocliente";
 	}
-	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
+
 	@GetMapping(value = "/cliente/delete/{id}")
 	public String delete(@PathVariable(value = "id") int id) {
 		clienteService.borrar(id);
