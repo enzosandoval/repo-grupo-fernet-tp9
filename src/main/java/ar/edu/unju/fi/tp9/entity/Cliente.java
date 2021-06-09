@@ -116,6 +116,8 @@ public class Cliente implements Serializable {
 	inverseJoinColumns = @JoinColumn(name = "ben_id"))
 	private List<Beneficio> beneficios = new ArrayList<Beneficio>();
 
+	
+	
 	public Cliente() {
 	}
 

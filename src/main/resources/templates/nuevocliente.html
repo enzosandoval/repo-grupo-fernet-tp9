@@ -132,6 +132,22 @@
 								th:errors="*{fechaUltimaCompra}"></div>
 						</div>
 					</div>
+					
+					
+					<h1 class="text-center">BENEFICIOS</h1>
+					<br>
+					 <div class="form-group row">
+					    <ol>
+					       <li th:each="b: ${beneficios}">
+					         <input type="checkbox" th:field="*{beneficios}" th:value="${b.id}"/>
+					         <label  th:for="check" th:text="${b.descripcion}" ></label>
+					      </li>
+					   </ol>
+					</div>
+					
+					
+					
+					
 					<h1 class="text-center">DATOS DE LA CUENTA</h1>
 					<br>
 					<div class="form-group row">

@@ -61,6 +61,16 @@ public class Beneficio {
 		this.descripcion = descripcion;
 	}
 
+	
+	
+	public List<Cliente> getClientes() {
+		return clientes;
+	}
+
+	public void setClientes(List<Cliente> clientes) {
+		this.clientes = clientes;
+	}
+
 	@Override
 	public String toString() {
 		return "Beneficio [id=" + id + ", descripcion=" + descripcion + "]";

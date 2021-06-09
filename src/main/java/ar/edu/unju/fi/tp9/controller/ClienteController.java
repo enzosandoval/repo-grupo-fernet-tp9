@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ar.edu.unju.fi.tp9.entity.Cliente;
+import ar.edu.unju.fi.tp9.service.IBeneficioService;
 import ar.edu.unju.fi.tp9.service.IClienteService;
 
 /**
@@ -37,6 +38,10 @@ public class ClienteController {
 	@Qualifier("clienteServiceImp")
 	private IClienteService clienteService;
 
+	@Autowired
+	@Qualifier("beneficioServiceImp")
+	private IBeneficioService beneficioService;
+	
 	@Autowired
 	private Cliente cliente;
 
@@ -53,6 +58,7 @@ public class ClienteController {
 		 */
 		cliente = new Cliente();
 		model.addAttribute("cliente", cliente);
+		model.addAttribute("beneficios", this.beneficioService.obtenerBeneficios());
 		return "nuevocliente.html";
 	}
 
