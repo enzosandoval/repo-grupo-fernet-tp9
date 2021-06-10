@@ -62,11 +62,12 @@ public class ClienteController {
 
 	@PostMapping("/cliente/guardar")
 	public String getModelPageClientes(@ModelAttribute("cliente") @Valid Cliente cliente,
-			BindingResult validationResult) {
+			BindingResult validationResult, Model model) {
 		if (validationResult.hasErrors()) { // 🛑 Datos con errores, re-direccionar a:
-			return "redirect:/cliente/nuevo";
+			model.addAttribute("cliente", cliente);
+			model.addAttribute("beneficios", beneficioService.obtenerBeneficios());
+			return "nuevocliente";
 		} else { // ✅ Datos todos correctos, hacer y re-direccionar a:
-
 			List<Beneficio> beneficios = new ArrayList<Beneficio>();
 			for (Beneficio beneficio : cliente.getBeneficios()) {
 
